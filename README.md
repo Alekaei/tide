@@ -14,3 +14,7 @@
 
 	tide .			// Open in current directory
 	tide ./file		// Open file
+
+## Preview
+
+![Preview Image](https://i.imgur.com/Z5pLqw6.png)
