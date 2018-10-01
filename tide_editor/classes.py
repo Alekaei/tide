@@ -120,23 +120,29 @@ class Project(Layer):
 		self.tree = self.getTree(self.location)
 
 	def getTree(self, path):
-		t = {}
+		t = {'folders':{},'files': []}
 		for p in os.listdir(path):
+			if p == '.git':
+				continue
 			if os.path.isdir(p):
-				t[p] = self.getTree (p)
+				t['folders'][p] = self.getTree (p)
 			else:
 				self.fileCount += 1
-				t[p] = None
+				t['files'].append(p)
 		return t
 
 	def printLeaf(self, x, y, leaf, prefix=''):
 		index = 0
-		for i in sorted(leaf)[::-1]:
+		for folder in leaf['folders']:
 			terminal.SetCursorPosition(x, y + index)
-			terminal.Write(prefix + ' ' + i)
+			terminal.Write(folder)
+			terminal.SetCursorPosition(self.width - 2, y + index)
+			terminal.Write('▼', foreground='31')
+			index += self.printLeaf(x + 2, y + index + 1, leaf['folders'][folder], prefix=prefix+'-') + 1
+		for file in leaf['files']:
+			terminal.SetCursorPosition(x, y + index)
+			terminal.Write(prefix + ' ' + file)
 			index += 1
-			if leaf[i]:
-				index += self.printLeaf(x + 2,y + index, leaf[i], prefix=prefix+'-')
 		return index
 
 	def render(self):
@@ -144,7 +150,7 @@ class Project(Layer):
 		""" Example View
 			┌────────────────┐
 			│    Project     │
-			│ folder      ⯆ │
+			│ folder       ▼ │
 			│   file         │
 			│   file.py      │
 			│ folder2        │
