@@ -1,4 +1,4 @@
-# ![TIDE logo](graphics/tide.svg?raw=true "TIDE")
+# ![TIDE logo](graphics/tide.png?raw=true "TIDE")
 **TIDE** is a **T***erminal* **I***ntegrated* **D***evelopment* **E***nvironment*
 
 ## Features
