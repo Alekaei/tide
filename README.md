@@ -6,6 +6,7 @@
 
 ## Upcomming Features
 **1.** Pods a.k.a Extensions or plugins
+
 **2.** Flavours a.k.a Syntax highlighting
 
 > Thank you @[J-Cotter](https://github.com/J-Cotter) for the great names :D
@@ -17,4 +18,4 @@
 
 ## Preview
 
-![Preview Image](https://i.imgur.com/Z5pLqw6.png)
+![Preview Image](https://i.imgur.com/cOOz4ZB.png)

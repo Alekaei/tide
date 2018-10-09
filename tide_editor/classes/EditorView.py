@@ -2,6 +2,7 @@ import keyboard
 import tide_editor.terminal as terminal
 from tide_editor.classes.View import View
 from tide_editor.classes.File import File
+import tide_editor.writeutil as writeutil
 
 class EditorView(View):
 	def __init__(self, x, y, width, height):
@@ -33,8 +34,6 @@ class EditorView(View):
 			│ utf-8  python                                                     Ln 12, Col 4 │
 			└────────────────────────────────────────────────────────────────────────────────┘
 		"""
-		## NEW RENDER MODE
-
 		## OLD RENDER MODE
 		"""
 		terminal.SetCursorPosition(self.x + 8, self.y)
@@ -66,6 +65,22 @@ class EditorView(View):
 		terminal.SetCursorPosition(self.x + 9, self.y + 6)
 		terminal.Write('\033[34mprint\033[0m(\033[35mf\033[32;1m\'sqrt (25) = \033[33m{\033[0mmath.sqrt(25)\033[33m}\033[32;1m\'\033[0m)')
 		"""
+
+		to[self.y] = writeutil.write(self.x + 8, to[self.y], f'\033[31m[sqrt.py     ●]\033[0m[test.py]')
+		to[self.y + 1] = writeutil.write(self.x, to[self.y + 1], '┌──────┐')
+		for y in range(2, self.height - 2):
+			to[self.y + y] = writeutil.write(self.x, to[self.y + y], f'│{y-1:>5} │')
+		to[self.y + self.height - 3] = writeutil.write(self.x, to[self.y + self.height - 3], f'├──────┴{"─" * (self.width - 9)}┐')
+		to[self.y + self.height - 2] = writeutil.write(self.x, to[self.y + self.height - 2], f'│ utf-8  python{" " * (self.width - 28)}Ln 1, Col 1 │')
+		to[self.y + self.height - 1] = writeutil.write(self.x, to[self.y + self.height - 1], f'└{"─" * (self.width - 2)}┘')
+
+		# FAKE FILE RENDER
+		to[self.y + 2] = writeutil.write(self.x + 9, to[self.y + 2], '\033[34mimport\033[0m math')
+
+		to[self.y + 4] = writeutil.write(self.x + 9, to[self.y + 4], '\033[34mprint\033[0m(\033[32;1m\'This program gets the sqrt of 25\'\033[0m)')
+		to[self.y + 5] = writeutil.write(self.x + 9, to[self.y + 5], '\033[34mprint\033[0m(\033[35mf\033[32;1m\'sqrt (25) = \033[33m{\033[0mmath.sqrt(25)\033[33m}\033[32;1m\'\033[0m)')
+		to[self.y + 5] = writeutil.write(self.x + 1, to[self.y + 5], '\033[41m    4 \033[0m')
+
 		return to
 
 	def RenderFile(self):
