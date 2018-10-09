@@ -31,5 +31,5 @@ def write(x, string, message):
 			del splits[i - 1]
 		else:  # ON END INDEX
 			splits[i] = splits[i][end_index - line_index:]
-	splits.insert(split_start_index + 1 if split_start_index > 0 else 0, message)
+	splits.insert(split_start_index + 1 if x > 0 else 0, message)
 	return ''.join(splits)
