@@ -1,3 +1,9 @@
+# Ignore my test file
+test.py
+
+# Ignore debug file
+launch.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
