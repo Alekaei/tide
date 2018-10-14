@@ -13,15 +13,19 @@ import tide.terminal as terminal
 # this is temporary as accessing __layers inside TideApp will mangle
 # waiting for Alexei to implement a terminal class <3
 def layout_temporary(self):
+	
+	# LOAD FROM A LAYOUT FILE IN FUTURE --- TEMPORARY SOLUTION BELOW
+	# __layers[0] is the base layer
 	terminal.__layers[0].Layout.setType(Layout.HORIZONTAL)								# Set the layout to split vertically
 	terminal.__layers[0].Layout.splitPoint = 30 										# Set the split point `x` in from the left
-	terminal.__layers[0].Layout.setView(0, ProjectView(0, 0, 0, 0, self.file)) 				# Setting left view to a `project` however need to implement dynamic argument passing !!!!!!!!
+	terminal.__layers[0].Layout.setView(0, ProjectView, self.file) 						# Setting left view to a `project` however need to implement dynamic argument passing !!!!!!!!
 																						# Idealy it would be ~~~.setView(0, ProjectView, path)
-	terminal.__layers[0].Layout.setView(1, Layout(0, 0, 0, 0))							# Set the right view to a `Layout`
+	terminal.__layers[0].Layout.setView(1, Layout)										# Set the right view to a `Layout`
 	terminal.__layers[0].Layout.views[1].setType(Layout.VERTICAL)						# Set the layout type to a vertical split
 	terminal.__layers[0].Layout.views[1].splitPoint = -20								# Set the split point to be 20 from the bottom
-	terminal.__layers[0].Layout.views[1].setView(0, EditorView(0, 0, 0, 0))				# Set the top layout view to a `Editor`
-	terminal.__layers[0].Layout.views[1].setView(1, TerminalView(0, 0, 0, 0, self.file))		
+	terminal.__layers[0].Layout.views[1].setView(0, EditorView)							# Set the top layout view to a `Editor`
+	terminal.__layers[0].Layout.views[1].setView(1, TerminalView, self.file)		    # Set the bottom layout view to a `Terminal`
+
 
 class TideApp:
 	def __init__(self, args):
