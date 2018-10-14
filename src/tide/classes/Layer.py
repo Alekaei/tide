@@ -10,4 +10,6 @@ class Layer:
 		pass
 
 	def render(self, to):
+		self.Layout.width = terminal.width
+		self.Layout.height = terminal.height
 		return self.Layout.render(to)

@@ -26,7 +26,7 @@ def write(x, string, message):
 			end_index = start_index + msg_len + 1
 			
 			if msg_len < line_index - start_index:  # Account for extra leftover string
-				line = splits[i]
+				line = splits[i] 
 				splits[i] = line[:start_index]
 				if i > 0:  # copy color over
 					splits.insert(i + 1 if x > 0 else 0, splits[i - 1])
