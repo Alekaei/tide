@@ -1,6 +1,6 @@
 import sys, platform, shutil
-from tide_editor.classes.Event import Event
-from tide_editor.classes.Layer import Layer
+from tide.classes.Event import Event
+from tide.classes.Layer import Layer
 
 if platform.system() == 'Windows':
 	import ctypes

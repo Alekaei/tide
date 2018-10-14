@@ -1,6 +1,6 @@
-import tide_editor.terminal as terminal
-from tide_editor.classes.View import View
-import tide_editor.writeutil as writeutil
+import tide.terminal as terminal
+from tide.classes.View import View
+import tide.writeutil as writeutil
 
 
 class TerminalView(View):
