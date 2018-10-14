@@ -19,3 +19,7 @@
 ## Preview
 
 ![Preview Image](https://i.imgur.com/cOOz4ZB.png)
+
+## Dependencies
+* Keyboard
+* Python +3.6
