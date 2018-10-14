@@ -22,7 +22,8 @@ onTerminalResize = Event()
 
 # soft render means use __last_render otherwise ignore it
 def __render__(soft=True):
-	global __last_render, __layers
+	global __last_render, __layers, width, height
+	width, height = shutil.get_terminal_size((80, 20))
 	newRenderFrame = [' ' * width] * height
 	for layer in __layers:
 		# Generate new frame
@@ -34,7 +35,11 @@ def __render__(soft=True):
 			if line == __last_render:
 				continue
 			SetCursorPosition(1, 1 + index)
-			Write(line)
+			if index == height - 1:
+				Write(line[:-300:])
+				pass
+			else:
+				Write(line)
 
 	else:
 		# If hard render then force render every new frame

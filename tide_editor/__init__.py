@@ -25,13 +25,13 @@ def main(path):
 	# __layers[0] is the base layer
 	terminal.__layers[0].Layout.setType(Layout.HORIZONTAL)								# Set the layout to split vertically
 	terminal.__layers[0].Layout.splitPoint = 30 										# Set the split point `x` in from the left
-	terminal.__layers[0].Layout.setView(0, ProjectView(0, 0, 0, 0, path)) 				# Setting left view to a `project` however need to implement dynamic argument passing !!!!!!!!
+	terminal.__layers[0].Layout.setView(0, ProjectView, path) 							# Setting left view to a `project` however need to implement dynamic argument passing !!!!!!!!
 																						# Idealy it would be ~~~.setView(0, ProjectView, path)
-	terminal.__layers[0].Layout.setView(1, Layout(0, 0, 0, 0))							# Set the right view to a `Layout`
+	terminal.__layers[0].Layout.setView(1, Layout)										# Set the right view to a `Layout`
 	terminal.__layers[0].Layout.views[1].setType(Layout.VERTICAL)						# Set the layout type to a vertical split
 	terminal.__layers[0].Layout.views[1].splitPoint = -20								# Set the split point to be 20 from the bottom
-	terminal.__layers[0].Layout.views[1].setView(0, EditorView(0, 0, 0, 0))				# Set the top layout view to a `Editor`
-	terminal.__layers[0].Layout.views[1].setView(1, TerminalView(0, 0, 0, 0, path))		# Set the bottom layout view to a `Terminal`
+	terminal.__layers[0].Layout.views[1].setView(0, EditorView)							# Set the top layout view to a `Editor`
+	terminal.__layers[0].Layout.views[1].setView(1, TerminalView, path)					# Set the bottom layout view to a `Terminal`
 
 	lastUpdate = time.time()
 	while alive:

@@ -8,8 +8,8 @@ import tide_editor.terminal as terminal
 
 class View:
 	def __init__(self, x, y, width, height):
-		self.x = x + 1
-		self.y = y + 1
+		self.x = x
+		self.y = y
 		self.width = width
 		self.height = height
 
