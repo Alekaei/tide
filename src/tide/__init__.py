@@ -12,7 +12,7 @@ import tide.terminal as terminal
 
 # this is temporary as accessing __layers inside TideApp will mangle
 # waiting for Alexei to implement a terminal class <3
-def layout(self):
+def layout_temporary(self):
 	terminal.__layers[0].Layout.setType(Layout.HORIZONTAL)								# Set the layout to split vertically
 	terminal.__layers[0].Layout.splitPoint = 30 										# Set the split point `x` in from the left
 	terminal.__layers[0].Layout.setView(0, ProjectView(0, 0, 0, 0, self.file)) 				# Setting left view to a `project` however need to implement dynamic argument passing !!!!!!!!
@@ -70,11 +70,9 @@ class TideApp:
 
 	def run(self):
 		terminal.ClearTerminal()
-		# # LOAD FROM A LAYOUT FILE IN FUTURE --- TEMPORARY SOLUTION BELOW
-		# # __layers[0] is the base layer
-	# Set the bottom layout view to a `tide.terminal`
 
-		layout(self)
+		# temporary layout
+		layout_temporary(self)
 
 		lastUpdate = time.time()
 		while self.should_run:
