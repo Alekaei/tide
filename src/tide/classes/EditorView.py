@@ -1,9 +1,9 @@
 
 import keyboard, os, re
-import tide_editor.terminal as terminal
-from tide_editor.classes.View import View
-from tide_editor.classes.File import File
-import tide_editor.writeutil as writeutil
+import tide.terminal as terminal
+from tide.classes.View import View
+from tide.classes.File import File
+import tide.writeutil as writeutil
 
 class EditorView(View):
 	def __init__(self, x, y, width, height):
