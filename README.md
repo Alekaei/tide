@@ -27,4 +27,5 @@ This repo is still in development and is not at a functional state!
 
 ## Dependencies
 * [Keyboard](https://github.com/boppreh/keyboard)
+* [PyYAML](https://github.com/yaml/pyyaml)
 * [Python 3.6 or above](https://www.python.org/downloads/)
