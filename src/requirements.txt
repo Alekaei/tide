@@ -1,0 +1,2 @@
+pyyaml==3.13
+keyboard==0.13.2
