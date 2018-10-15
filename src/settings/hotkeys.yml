@@ -1,0 +1,18 @@
+main:
+  # Quit tide
+  quit: ctrl+x
+  # Save current file
+  save: ctrl+s
+  # Copy highlighted contents
+  copy: ctrl+c
+  # Paste clipped contents
+  paste: ctrl+v
+movement:
+  # Move to view above
+  up: ctrl+up
+  # Move to view bellow
+  down: ctrl+down
+  # Move to view on left
+  left: ctrl+left
+  # Move to view on right
+  right: ctrl+right
