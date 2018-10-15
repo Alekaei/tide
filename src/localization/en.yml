@@ -1,0 +1,6 @@
+# Misc
+version: "Version: {0}"
+# Editor Related
+no_open_file: "You haven't opened a file yet"
+# View related
+terminal_view_name: "Terminal"
