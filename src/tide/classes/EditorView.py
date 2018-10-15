@@ -1,3 +1,4 @@
+
 import keyboard, os, re
 import tide_editor.terminal as terminal
 from tide_editor.classes.View import View

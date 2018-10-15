@@ -1,6 +1,6 @@
-from tide_editor.classes.Layout import Layout
+from tide.classes.Layout import Layout
 
-import tide_editor.terminal as terminal
+import tide.terminal as terminal
 
 class Layer:
 	def __init__(self):

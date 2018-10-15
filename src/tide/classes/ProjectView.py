@@ -1,7 +1,7 @@
-import tide_editor.terminal as terminal
+import tide.terminal as terminal
 import os
-from tide_editor.classes.View import View
-import tide_editor.writeutil as writeutil
+from tide.classes.View import View
+import tide.writeutil as writeutil
 
 class ProjectView(View):
 	def __init__(self, x, y, width, height, location):

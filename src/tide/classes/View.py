@@ -4,7 +4,7 @@ Base class for all views
 
 """
 
-import tide_editor.terminal as terminal
+import tide.terminal as terminal
 
 class View:
 	def __init__(self, x, y, width, height):
