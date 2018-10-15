@@ -18,8 +18,6 @@ __last_render = [[' ' * width] * height] # Keep track of last render to only upd
 __layers = [Layer()]
 __active_layer = 0
 
-onTerminalResize = Event()
-
 # soft render means use __last_render otherwise ignore it
 def __render__(soft=True):
 	global __last_render, __layers, width, height
@@ -85,9 +83,6 @@ def Write(message, foreground='37', background='40'):
 def WriteLine(message, foreground='37', background='40'):
 	__send__(f'\033[{foreground};{background}m{message}\033[0m\n')
 
-def Centerize(x, y, width, height, *lines):
-	width_left = width - max(lines)
-
 def DeleteLayer(layer):
 	if layer not in __layers or len(__layers) == 1:
 		return
@@ -97,6 +92,3 @@ def AddLayer(layer, setActive=False):
 	__layers.append(layer)
 	if setActive:
 		__active_layer = len(__layers) - 1
-
-def SetColor(color):
-	__send__(f'\033[{color}m')

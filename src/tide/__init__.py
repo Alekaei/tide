@@ -1,5 +1,5 @@
-
-
+__author__ = 'Aleksei Ivanov'
+__version__ = '0.0.1'
 
 import os, time, keyboard, traceback
 
@@ -10,8 +10,14 @@ from tide.classes.Layout import Layout
 
 import tide.terminal as terminal
 
-# this is temporary as accessing __layers inside TideApp will mangle
-# waiting for Alexei to implement a terminal class <3
+from tide.classes.TUI import TUI
+from tide.classes.Localization import Localization
+
+tui = TUI()
+localization = Localization()
+
+
+# TEMPORARY: this 
 def layout_temporary(self):
 	
 	# LOAD FROM A LAYOUT FILE IN FUTURE --- TEMPORARY SOLUTION BELOW

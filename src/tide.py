@@ -1,6 +1,3 @@
-
-__author__='Aleksei Ivanov'
-
 import sys
 from tide import TideApp
 

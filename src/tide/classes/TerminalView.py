@@ -25,29 +25,6 @@ class TerminalView(View):
 			│ ~ >                                │
 			└────────────────────────────────────┘
 		"""
-		""" ------- OLD RENDER METHOD
-		terminal.SetCursorPosition(self.x, self.y)
-		terminal.Write(f'┌─ Terminal {"─" * (self.width - 13)}┐')
-		for x in range(1, self.height - 3):
-			terminal.SetCursorPosition(self.x, self.y + x)
-			terminal.Write('│')
-			terminal.SetCursorPosition(self.x + self.width - 1, self.y + x)
-			terminal.Write('│')
-		terminal.SetCursorPosition(self.x, self.y + self.height - 3)
-		terminal.Write(f'├{"─" * (self.width - 2)}┤')
-
-		terminal.SetCursorPosition(self.x, self.y + self.height - 2)
-		terminal.Write('│ ')
-		terminal.Write(self.location, foreground='31')
-		terminal.Write(' >')
-		terminal.SetCursorPosition(self.x + self.width - 1, self.y + self.height - 2)
-		terminal.Write('│')
-
-		terminal.SetCursorPosition(self.x, self.y + self.height - 1)
-		terminal.Write(f'└{"─" * (self.width - 2)}┘')
-		"""
-
-		# This shit up here is now this nicer shit down here :)
 
 		to[self.y] = writeutil.write(self.x, to[self.y], f'┌─ Terminal {"─" * (self.width - 13)}┐')
 		for y in range(1, self.height - 3):
