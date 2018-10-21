@@ -1,4 +1,4 @@
-import sys, platform, shutil, re
+import sys, shutil, re
 from tide.classes.Layer import Layer
 
 class TUI:
@@ -47,11 +47,6 @@ class TUI:
 		"""
 		# SETUP
 		self.__updateSize__()
-		system = platform.system()
-		if system == 'Windows':
-			self.__windows__()
-		else:
-			self.__linux__()
 
 		# PUBLIC VARIABLES
 		self.lastFrame = [' ' * self.width] * self.height
@@ -228,18 +223,3 @@ class TUI:
 		Update size values of terminal
 		"""
 		self.width, self.height = shutil.get_terminal_size((80, 20))
-
-	def __windows__(self):
-		"""
-		Initialize windows specific features
-		"""
-		import ctypes
-
-		kernel32 = ctypes.windll.kernel32
-		kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
-
-	def __linux__(self):
-		"""
-		Initialize linux specific features
-		"""
-		pass
