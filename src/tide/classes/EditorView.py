@@ -13,6 +13,7 @@ class EditorView(View):
 		self.file_index = 0
 
 		self.openFiles.append(File(os.path.abspath('./test.py')))
+		self.openFiles.append(File(os.path.abspath('./tide/__init__.py')))
 
 		self.min_x = self.x + 9
 		self.max_x = self.x + self.width - 2

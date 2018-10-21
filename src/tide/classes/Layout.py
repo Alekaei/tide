@@ -110,4 +110,3 @@ class Layout:
 			self.views[i].x, self.views[i].y, self.views[i].width, self.views[i].height = self.getViewRect(i)
 			to = self.views[i].render(to)
 		return to
-

@@ -19,7 +19,6 @@ localization = Localization()
 
 # TEMPORARY: this 
 def layout_temporary(self):
-	
 	# LOAD FROM A LAYOUT FILE IN FUTURE --- TEMPORARY SOLUTION BELOW
 	# __layers[0] is the base layer
 	terminal.__layers[0].Layout.setType(Layout.HORIZONTAL)								# Set the layout to split vertically

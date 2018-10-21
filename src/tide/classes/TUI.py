@@ -1,5 +1,4 @@
-import sys, platform, shutil
-from tide.classes.Event import Event
+import sys, platform, shutil, re
 from tide.classes.Layer import Layer
 
 class TUI:
@@ -98,7 +97,42 @@ class TUI:
 		message : str
 			A string message
 		"""
-		pass
+		print(message)
+		insertLine = self.nextFrame[self.__y]
+		nf_splits = re.sub('(\\033\[(?:\d;|\d)+\w)', r',\1,', insertLine).split(',')
+		m_splits = re.sub('(\\033\[(?:\d;|\d)+\w)', r',\1,', message).split(',')
+		msg_len = len(' '.join([m_splits[x] for x in range(0, len(m_splits), 2)]))
+
+		print(insertLine, nf_splits, m_splits, msg_len, sep='\n')
+
+		lineIndex = 0
+		startIndex = -1
+		for i in range(0, len(nf_splits), 2):
+			if lineIndex + len(nf_splits[i]) <= self.__x:
+				if startIndex == -1:
+					startIndex = self.__x - lineIndex
+
+					if len(nf_splits[i][startIndex:]) > msg_len:
+						if i > 0: # account for color
+							nf_splits[i] = nf_splits[i][:startIndex] + message + nf_splits[i - 1] + nf_splits[i][startIndex + msg_len:]
+						else:
+							nf_splits[i] = nf_splits[i][:startIndex] + message + nf_splits[i][startIndex + msg_len:]
+						break
+					elif len(nf_splits[i][startIndex:]) == msg_len:
+						nf_splits[i] = nf_splits[i][:startIndex] + message + nf_splits[i][startIndex + msg_len:]
+						break
+				if (lineIndex + len(nf_splits[i])) - self.__x < msg_len:
+					del nf_splits[i]
+					i -= 1
+					if len(nf_splits) > i:
+						del nf_splits[i + 1]
+				else:
+					endIndex = (self.__x + msg_len) - lineIndex
+					nf_splits[i] = nf[i][endIndex:]
+
+					self.nextFrame[self.__y] = ''.join(nf_splits)
+					break
+			lineIndex += len(nf_splits[i])
 
 	def addLayer(self, layer, setToActive=False):
 		"""
@@ -131,7 +165,7 @@ class TUI:
 		index = self.layers.index(layer)
 		del self.layers[index]
 		# Set activeLayer to last layer if it was the deleted layer
-		if self.activeLayer = index:
+		if self.activeLayer == index:
 			self.activeLayer = len(self.layers) - 1
 
 	def update(self):
@@ -143,14 +177,10 @@ class TUI:
 		self.__input__()
 
 	def __increase__layer__(self):
-		self.activeLayer += 1
-		if self.activeLayer > len(self.layers) - 1:
-			self.activeLayer = 0		
+		self.activeLayer = (self.activeLayer + 1) % len(self.layers)
 
 	def __decrease_layer__(self):
-		self.activeLayer -= 1
-		if self.activeLayer < 0:
-			self.activeLayer = len(self.layers) - 1 
+		self.activeLayer = (self.activeLayer - 1) % len(self.layers)
 
 	def __input__(self):
 		"""
@@ -177,6 +207,7 @@ class TUI:
 				if line != self.lastFrame[self.activeLayer][y]:
 					continue
 			self.setCursorPosition(0, y, True)
+			line = f'{y:<3}:' + line
 			self.__send__(line)
 
 	def __send__(self, message):
@@ -188,6 +219,7 @@ class TUI:
 		message : string
 			The message to write
 		"""
+		print(message)
 		sys.stdout.write(message)
 		sys.stdout.flush()
 
