@@ -1,7 +1,7 @@
 __author__ = 'Aleksei Ivanov'
 __version__ = '0.0.1'
 
-import os, time, keyboard, traceback
+import os, time, traceback
 
 from tide.classes.TerminalView import TerminalView
 from tide.classes.EditorView import EditorView
@@ -93,11 +93,11 @@ class TideApp:
 				terminal.SetCursorPosition(1,1)
 				lastUpdate = time.time()
 				terminal.SetCursor(True)
-
+			"""
 			if keyboard.is_pressed('esc'):
 				self.cleanup()
 				break
-
+			"""
 	def cleanup(self):
 		terminal.ClearTerminal();
 

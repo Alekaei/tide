@@ -26,6 +26,6 @@ This repo is still in development and is not at a functional state!
 * [Issue Template](https://github.com/Alekaei/tide/tree/master/.github/ISSUE_TEMPLATE)
 
 ## Dependencies
-* [Keyboard](https://github.com/boppreh/keyboard)
 * [PyYAML](https://github.com/yaml/pyyaml)
 * [Python 3.6 or above](https://www.python.org/downloads/)
+* Linux
