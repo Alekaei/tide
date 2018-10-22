@@ -1,13 +1,13 @@
 
-import keyboard, os, re
+import os, re, curses
 import tide.terminal as terminal
 from tide.classes.View import View
 from tide.classes.File import File
 import tide.writeutil as writeutil
 
 class EditorView(View):
-	def __init__(self, x, y, width, height):
-		View.__init__(self, x, y, width, height)
+	def __init__(self, window):
+		View.__init__(self, window)
 
 		self.openFiles = []
 		self.file_index = 0
@@ -15,12 +15,7 @@ class EditorView(View):
 		self.openFiles.append(File(os.path.abspath('./test.py')))
 		self.openFiles.append(File(os.path.abspath('./tide/__init__.py')))
 
-		self.min_x = self.x + 9
-		self.max_x = self.x + self.width - 2
-		self.min_y = self.y + 2
-		self.max_y = self.y + self.height - 4
-
-	def render(self, to):
+	def render(self):
 		""" Example View
 					[ sqrt.py     ● ][ test.py       ]
 			┌──────┐
@@ -37,7 +32,6 @@ class EditorView(View):
 			├──────┴─────────────────────────────────────────────────────────────────────────┐
 			│ utf-8  python                                                     Ln 12, Col 4 │
 			└────────────────────────────────────────────────────────────────────────────────┘
-		"""
 		to[self.y + 1] = writeutil.write(self.x, to[self.y + 1], '┌──────┐')
 		for y in range(2, self.height - 2):
 			to[self.y + y] = writeutil.write(self.x, to[self.y + y], f'│      │')
@@ -46,6 +40,17 @@ class EditorView(View):
 		to[self.y + self.height - 1] = writeutil.write(self.x, to[self.y + self.height - 1], f'└{"─" * (self.width - 2)}┘')
 		to = self.__render_files(to)
 		return to
+		"""
+		y, x = self.window.getpayyx()
+		height, width = self.window.getmaxyx()
+
+		self.window.addstr(y, x, '┌──────┐')
+		for editorline in range(1, height - 3):
+			self.window.addstr(y + editorline, x, '│      │')
+		self.window.addstr(y + height - 3, x, f'├──────┴{"─" * (width - 9)}┐')
+		self.window.addstr(y + height - 2, x, f'│{" " * (width - 2)}│')
+		self.window.addstr(y + height - 1, x, f'└{"─" * (width - 2)}┘')
+		self.window.noutrefresh()
 
 	def RenderFile(self):
 		if len(self.openFiles) == 0:

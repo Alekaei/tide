@@ -1,7 +1,11 @@
 __author__ = 'Aleksei Ivanov'
 __version__ = '0.0.1'
 
-import os, time, traceback
+import os, time, traceback, platform
+
+if platform.system() == 'Windows':
+	pritn('Windows is not supported')
+	quit()
 
 from tide.classes.TerminalView import TerminalView
 from tide.classes.EditorView import EditorView
@@ -81,7 +85,7 @@ class TideApp:
 		terminal.ClearTerminal()
 
 		# temporary layout
-		layout_temporary(self)
+		# layout_temporary(self)
 
 		lastUpdate = time.time()
 		while self.should_run:

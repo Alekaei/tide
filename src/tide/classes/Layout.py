@@ -1,22 +1,11 @@
 class Layout:
 	VERTICAL = 0
 	HORIZONTAL = 1
-	CENTER = 2
-	TOP_LEFT = 3
-	TOP_RIGHT = 4
-	BOTTOM_LEFT = 5
-	BOTTOM_RIGHT = 6
-	SCALE = 7
 
-	def __init__(self, x, y, width, height):
-		self.x = x
-		self.y = y
-		self.width = width
-		self.height = height
-		
+	def __init__(self, type=Layout.HORIZONTAL, split=0.5):	
 		self.views = []
-		self.type = Layout.HORIZONTAL
-		self.splitPoint = self.width // 2
+		self.type = type
+		self.splitPoint = split
 
 	def setView(self, index, view, *params):
 		newView = view(*self.getViewRect(index), *params)
@@ -86,24 +75,6 @@ class Layout:
 			self.splitPoint = self.height // 2
 		elif self.type == Layout.HORIZONTAL:
 			self.splitPoint = self.width // 2
-
-	def increase(self):
-		if self.width - (self.splitPoint + 1) < 3:
-			return
-		self.splitPoint += 1
-
-	def decrease(self):
-		if self.splitPoint - 1 < 3:
-			return
-		self.splitPoint -= 1
-	
-	def setSize(self, width, height):
-		self.width = width
-		self.height = height
-
-	def setPos(self, x, y):
-		self.x = x
-		self.y = y
 	
 	def render(self, to):
 		for i in range(len(self.views)):
