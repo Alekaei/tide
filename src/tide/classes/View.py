@@ -13,3 +13,7 @@ class View:
 
 	def render(self):
 		self.window.noutrefresh()
+
+	def __update_size__(self, x, y, cols, lines):
+		self.window.mvwin(y, x)
+		self.window.resize(lines, cols)
