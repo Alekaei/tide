@@ -1,7 +1,7 @@
 __author__ = 'Aleksei Ivanov'
 __version__ = '0.0.1'
 
-import os, time, traceback, platform
+import os, time, traceback, platform, curses
 
 if platform.system() == 'Windows':
 	pritn('Windows is not supported')
@@ -26,18 +26,18 @@ def layout_temporary(self):
 	# LOAD FROM A LAYOUT FILE IN FUTURE --- TEMPORARY SOLUTION BELOW
 	# __layers[0] is the base layer
 	terminal.__layers[0].Layout.setType(Layout.HORIZONTAL)								# Set the layout to split vertically
-	terminal.__layers[0].Layout.splitPoint = 30 										# Set the split point `x` in from the left
+	terminal.__layers[0].Layout.splitPoint = min([30, (curses.COLS * 0.3)]) 			# Set the split point `x` in from the left
 	terminal.__layers[0].Layout.setView(0, ProjectView, self.file) 						# Setting left view to a `project` however need to implement dynamic argument passing !!!!!!!!
 																						# Idealy it would be ~~~.setView(0, ProjectView, path)
 	terminal.__layers[0].Layout.setView(1, Layout)										# Set the right view to a `Layout`
 	terminal.__layers[0].Layout.views[1].setType(Layout.VERTICAL)						# Set the layout type to a vertical split
-	terminal.__layers[0].Layout.views[1].splitPoint = -20								# Set the split point to be 20 from the bottom
+	terminal.__layers[0].Layout.views[1].splitPoint = min([-20, (curses.LINES * 0.75)])	# Set the split point to be 20 from the bottom
 	terminal.__layers[0].Layout.views[1].setView(0, EditorView)							# Set the top layout view to a `Editor`
 	terminal.__layers[0].Layout.views[1].setView(1, TerminalView, self.file)		    # Set the bottom layout view to a `Terminal`
 
 
 class TideApp:
-	def __init__(self, args):
+	def __init__(self, ):
 		"""
 		TIDE initializer
 
@@ -64,9 +64,15 @@ class TideApp:
 
 	def __enter__(self):
 		"""Executed on example: with TideApp(sys.argv) as app:"""
+		# Curses startup
+		curses.noecho()
+		curses.cbreak()
 
 		# Allow the editor to run if requested
 		self.should_run = True
+		self.screen = curses.initscr()
+
+		self.screen.keypad(True)
 
 		if "--help" in self.args:
 			self.print_help()
@@ -97,13 +103,14 @@ class TideApp:
 				terminal.SetCursorPosition(1,1)
 				lastUpdate = time.time()
 				terminal.SetCursor(True)
+			
 			"""
 			if keyboard.is_pressed('esc'):
 				self.cleanup()
 				break
 			"""
 	def cleanup(self):
-		terminal.ClearTerminal();
+		curses.endwin()
 
 	def __exit__(self, type, value, traceback):
 		self.cleanup()
