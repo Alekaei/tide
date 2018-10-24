@@ -1,12 +1,11 @@
 import curses
+from tide.classes.Layout import Layout
 
 class TUI:
 	def __init__(self):
-		self.layouts = []
+		self.layout = Layout()
 		self.activeWindow = None
 
 	def __render__(self):
-		for layout in self.layouts:
-			layout.render()
-		
+		self.layout.render()
 		curses.doupdate()

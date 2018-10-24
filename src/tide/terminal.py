@@ -1,3 +1,4 @@
+"""
 import sys, platform, shutil
 from tide.classes.Event import Event
 from tide.classes.Layer import Layer
@@ -92,3 +93,4 @@ def AddLayer(layer, setActive=False):
 	__layers.append(layer)
 	if setActive:
 		__active_layer = len(__layers) - 1
+"""

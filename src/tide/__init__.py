@@ -12,32 +12,29 @@ from tide.classes.EditorView import EditorView
 from tide.classes.ProjectView import ProjectView
 from tide.classes.Layout import Layout
 
-import tide.terminal as terminal
-
 from tide.classes.TUI import TUI
 from tide.classes.Localization import Localization
 
-tui = TUI()
-localization = Localization()
+tui = None
+localization = None
 
 
 # TEMPORARY: this 
 def layout_temporary(self):
 	# LOAD FROM A LAYOUT FILE IN FUTURE --- TEMPORARY SOLUTION BELOW
-	# __layers[0] is the base layer
-	terminal.__layers[0].Layout.setType(Layout.HORIZONTAL)								# Set the layout to split vertically
-	terminal.__layers[0].Layout.splitPoint = min([30, (curses.COLS * 0.3)]) 			# Set the split point `x` in from the left
-	terminal.__layers[0].Layout.setView(0, ProjectView, self.file) 						# Setting left view to a `project` however need to implement dynamic argument passing !!!!!!!!
-																						# Idealy it would be ~~~.setView(0, ProjectView, path)
-	terminal.__layers[0].Layout.setView(1, Layout)										# Set the right view to a `Layout`
-	terminal.__layers[0].Layout.views[1].setType(Layout.VERTICAL)						# Set the layout type to a vertical split
-	terminal.__layers[0].Layout.views[1].splitPoint = min([-20, (curses.LINES * 0.75)])	# Set the split point to be 20 from the bottom
-	terminal.__layers[0].Layout.views[1].setView(0, EditorView)							# Set the top layout view to a `Editor`
-	terminal.__layers[0].Layout.views[1].setView(1, TerminalView, self.file)		    # Set the bottom layout view to a `Terminal`
+	tui.layout.setType(Layout.HORIZONTAL)								# Set the layout to split vertically
+	tui.layout.splitPoint = min([30, (curses.COLS * 0.3)]) 				# Set the split point `x` in from the left
+	tui.layout.setView(0, ProjectView, self.file) 						# Setting left view to a `project` however need to implement dynamic argument passing !!!!!!!!
+																		# Idealy it would be ~~~.setView(0, ProjectView, path)
+	tui.layout.setView(1, Layout)										# Set the right view to a `Layout`
+	tui.layout.views[1].setType(Layout.VERTICAL)						# Set the layout type to a vertical split
+	tui.layout.views[1].splitPoint = min([-20, (curses.LINES * 0.75)])	# Set the split point to be 20 from the bottom
+	tui.layout.views[1].setView(0, EditorView)							# Set the top layout view to a `Editor`
+	tui.layout.views[1].setView(1, TerminalView, self.file)		   	 	# Set the bottom layout view to a `Terminal`
 
 
 class TideApp:
-	def __init__(self, ):
+	def __init__(self, args):
 		"""
 		TIDE initializer
 
@@ -64,15 +61,19 @@ class TideApp:
 
 	def __enter__(self):
 		"""Executed on example: with TideApp(sys.argv) as app:"""
+		global tui, localization
 		# Curses startup
-		curses.noecho()
-		curses.cbreak()
 
 		# Allow the editor to run if requested
 		self.should_run = True
 		self.screen = curses.initscr()
-
+		curses.noecho()
+		curses.cbreak()
 		self.screen.keypad(True)
+
+		tui = TUI()
+		localization = Localization()
+
 
 		if "--help" in self.args:
 			self.print_help()
@@ -88,22 +89,21 @@ class TideApp:
 		return self
 
 	def run(self):
-		terminal.ClearTerminal()
 
 		# temporary layout
-		# layout_temporary(self)
+		#layout_temporary(self)
+
+		tui.layout.setType(Layout.HORIZONTAL)
+		tui.layout.splitPoint = 0.5
+		tui.layout.setView(0, ProjectView, self.file)
+		tui.layout.setView(1, EditorView)
 
 		lastUpdate = time.time()
 		while self.should_run:
 			# Main update loop
 			# Render loop every 100ms
 			if time.time() - lastUpdate > 0.1:
-				terminal.SetCursor(False)
-				terminal.__render__()
-				terminal.SetCursorPosition(1,1)
-				lastUpdate = time.time()
-				terminal.SetCursor(True)
-			
+				tui.__render__()
 			"""
 			if keyboard.is_pressed('esc'):
 				self.cleanup()

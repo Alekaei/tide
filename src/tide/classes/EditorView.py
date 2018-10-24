@@ -41,15 +41,19 @@ class EditorView(View):
 		to = self.__render_files(to)
 		return to
 		"""
-		y, x = self.window.getpayyx()
+		self.window.border()
+		self.window.noutrefresh()
+		return
+
+		y, x = self.window.getparyx()
 		height, width = self.window.getmaxyx()
 
-		self.window.addstr(y, x, '┌──────┐')
+		self.window.addnstr(y, x, '┌──────┐')
 		for editorline in range(1, height - 3):
-			self.window.addstr(y + editorline, x, '│      │')
-		self.window.addstr(y + height - 3, x, f'├──────┴{"─" * (width - 9)}┐')
-		self.window.addstr(y + height - 2, x, f'│{" " * (width - 2)}│')
-		self.window.addstr(y + height - 1, x, f'└{"─" * (width - 2)}┘')
+			self.window.addnstr(y + editorline, x, '│      │')
+		self.window.addnstr(y + height - 3, x, f'├──────┴{"─" * (width - 9)}┐')
+		self.window.addnstr(y + height - 2, x, f'│{" " * (width - 2)}│')
+		self.window.addnstr(y + height - 1, x, f'└{"─" * (width - 2)}┘')
 		self.window.noutrefresh()
 
 	def RenderFile(self):

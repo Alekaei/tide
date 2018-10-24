@@ -1,21 +1,22 @@
 import curses
+from tide.classes.View import View
 
 class Layout:
 	VERTICAL = 0
 	HORIZONTAL = 1
 
-	def __init__(self, x=0, y=0, cols=curses.COLS - 1, lines=curses.LINES - 1, type=Layout.HORIZONTAL, split=0.5):	
+	def __init__(self, x=0, y=0, cols=None, lines=None, type=1, split=0.5):	
 		self.views = []
 		self.type = type
 		self.splitPoint = split
 		
 		self.x = x
-		self.y = yaco
-		self.cols = cols
-		self.lines = lines
+		self.y = y
+		self.cols = curses.COLS - 1 if not cols else cols
+		self.lines = curses.LINES - 1 if not lines else lines
 
 	def setView(self, index, view, *params):
-		if issubclass(type(view), View):
+		if issubclass(view, View):
 			x, y, cols, lines = self.getSize(index)
 			win = curses.newwin(lines, cols, y, x)
 			if len(self.views) - 1 < index:
@@ -30,10 +31,6 @@ class Layout:
 
 	def setType(self, sType):
 		self.type = sType
-		if self.type == Layout.VERTICAL:
-			self.splitPoint = self.height // 2
-		elif self.type == Layout.HORIZONTAL:
-			self.splitPoint = self.width // 2
 
 	def getSize(self, n):
 		x,y,cols,lines = self.x, self.y, self.cols, self.lines
@@ -51,14 +48,14 @@ class Layout:
 				if self.splitPoint < 0:
 					# Split is working from the right
 					if n == 0:
-						cols += self.splitPoint
+						cols += self.splitPoint + 1
 					elif n == 1:
 						cols = -self.splitPoint
 						x += cols + self.splitPoint
 				else:
 					# Split is working from the left
 					if n == 0:
-						cols = self.splitPoint
+						cols = self.splitPoint - 1
 					elif n == 1:
 						cols = cols - self.splitPoint
 						x += self.splitPoint
@@ -74,19 +71,19 @@ class Layout:
 					y += lines
 			else:
 				if n == 0:
-					lines = self.splitPoint
+					lines += self.splitPoint
 				elif n == 1:
 					lines = lines - self.splitPoint
 					y += self.splitPoint
 
-		return  x, y, cols, lines
+		return  int(x), int(y), int(cols), int(lines)
 	
 	def __update_size__(self, *args):
 		for i in range(len(self.views)):
 			if len(args) == 0:
 				x, y, cols, lines = self.getSize(i)
 			else:
-				x, y, cols, lines = *args
+				x, y, cols, lines = args
 			self.views[i].__update_size__(x, y, cols, lines)
 
 	def render(self):

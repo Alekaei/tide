@@ -9,7 +9,7 @@ class ProjectView(View):
 		self.location = location
 		self.fileCount = 0
 
-	def render(self, to):
+	def render(self):
 		""" Example View
 			┌────────────────┐
 			│    Project     │
@@ -34,14 +34,19 @@ class ProjectView(View):
 		to[self.y + self.height - 1] = writeutil.write(self.x, to[self.y + self.height - 1], f'└{"─" * (self.width - 2)}┘')
 		return to
 		"""
-		y, x = self.window.getpayyx()
+
+		self.window.border()
+		self.window.noutrefresh()
+		return
+
+		y, x = self.window.getparyx()
 		height, width = self.window.getmaxyx()
 
-		self.window.addstr(y, x, f'┌{"─" * (width - 2)}┐')
+		self.window.addnstr(y, x, f'┌{"─" * (width - 2)}┐')
 		scopeName = os.path.basename(self.location)
-		self.window.addstr(y + 1, x, f'│{scopeName.center(width - 2, " ")}│')
+		self.window.addnstr(y + 1, x, f'│{scopeName.center(width - 2, " ")}│')
 		for line in range(2, height - 3):
-			self.window.addstr(y + line, x, f'│{" " * (width - 2)}│')
-		self.window.addstr(y + height - 3, x, f'├{"─" * (width - 2)}┤')
-		self.window.addstr(y + height - 2, x, f'│{(str(fileCount) + " files").center(width - 2, " ")}│')
-		self.window.addstr(y + height - 1, x, f'└{"─" * (width - 2)}┘')
+			self.window.addnstr(y + line, x, f'│{" " * (width - 2)}│')
+		self.window.addnstr(y + height - 3, x, f'├{"─" * (width - 2)}┤')
+		self.window.addnstr(y + height - 2, x, f'│{(str(fileCount) + " files").center(width - 2, " ")}│')
+		self.window.addnstr(y + height - 1, x, f'└{"─" * (width - 2)}┘')
