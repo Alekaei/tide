@@ -35,18 +35,19 @@ class ProjectView(View):
 		return to
 		"""
 
-		self.window.border()
-		self.window.noutrefresh()
-		return
+		#self.window.border()
+		#self.window.noutrefresh()
+		#return
 
-		y, x = self.window.getparyx()
+		y, x = self.window.getbegyx()
 		height, width = self.window.getmaxyx()
 
-		self.window.addnstr(y, x, f'┌{"─" * (width - 2)}┐')
+		self.window.insnstr(y, x, f'┌{"─" * (width - 2)}┐', width)
 		scopeName = os.path.basename(self.location)
-		self.window.addnstr(y + 1, x, f'│{scopeName.center(width - 2, " ")}│')
+		self.window.insnstr(y + 1, x, f'│{scopeName.center(width - 2, " ")}│', width)
 		for line in range(2, height - 3):
-			self.window.addnstr(y + line, x, f'│{" " * (width - 2)}│')
-		self.window.addnstr(y + height - 3, x, f'├{"─" * (width - 2)}┤')
-		self.window.addnstr(y + height - 2, x, f'│{(str(fileCount) + " files").center(width - 2, " ")}│')
-		self.window.addnstr(y + height - 1, x, f'└{"─" * (width - 2)}┘')
+			self.window.insnstr(y + line, x, f'│{" " * (width - 2)}│', width)
+		self.window.insnstr(y + height - 3, x, f'├{"─" * (width - 2)}┤', width)
+		self.window.insnstr(y + height - 2, x, f'│{(str("10") + " files").center(width - 2, " ")}│', width)
+		self.window.insnstr(y + height - 1, x, f'└{"─" * (width - 2)}┘', width)
+		self.window.noutrefresh()

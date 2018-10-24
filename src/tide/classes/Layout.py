@@ -13,7 +13,7 @@ class Layout:
 		self.x = x
 		self.y = y
 		self.cols = curses.COLS - 1 if not cols else cols
-		self.lines = curses.LINES - 1 if not lines else lines
+		self.lines = curses.LINES if not lines else lines
 
 	def setView(self, index, view, *params):
 		if issubclass(view, View):

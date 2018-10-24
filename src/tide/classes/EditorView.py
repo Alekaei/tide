@@ -41,19 +41,16 @@ class EditorView(View):
 		to = self.__render_files(to)
 		return to
 		"""
-		self.window.border()
-		self.window.noutrefresh()
-		return
 
-		y, x = self.window.getparyx()
+		y, x = self.window.getbegyx()
 		height, width = self.window.getmaxyx()
 
-		self.window.addnstr(y, x, '┌──────┐')
+		self.window.insnstr(0, 0, f'┌──────┐{" " * (width - 8)}', width)
 		for editorline in range(1, height - 3):
-			self.window.addnstr(y + editorline, x, '│      │')
-		self.window.addnstr(y + height - 3, x, f'├──────┴{"─" * (width - 9)}┐')
-		self.window.addnstr(y + height - 2, x, f'│{" " * (width - 2)}│')
-		self.window.addnstr(y + height - 1, x, f'└{"─" * (width - 2)}┘')
+			self.window.insnstr(editorline, 0, f'│      │{" " * (width - 8)}', 0)
+		self.window.insnstr(height - 3, 0, f'├──────┴{"─" * (width - 9)}┐', width)
+		self.window.insnstr(height - 2, 0, f'│{" " * (width - 2)}│', width)
+		self.window.insnstr(height - 1, 0, f'└{"─" * (width - 2)}┘', width)
 		self.window.noutrefresh()
 
 	def RenderFile(self):
@@ -75,9 +72,9 @@ class EditorView(View):
 		if len(self.openFiles) == 0:
 			return
 		openFile = self.openFiles[self.file_index]
-		terminal.SetCursorPosition(self.max_x + openFile.cursor_x, self.max_y + openFile.cursor_y)
 
-	def __no_open_files(self, to):
+	def __no_open_files(self):
+		"""
 		width = self.width - 10
 		height = self.height - 5
 		msg_lines = [
@@ -93,8 +90,11 @@ class EditorView(View):
 		for i in range(len(msg_lines)):
 			to[start_y + i] = writeutil.write(start_x, to[start_y + i], msg_lines[i])
 		return to
+		"""
+		pass
 
-	def __render_files(self, to):
+	def __render_files(self):
+		"""
 		if len(self.openFiles) == 0:  # No Files Open
 			return self.__no_open_files(to)
 		openFilesLine = ""
@@ -115,3 +115,5 @@ class EditorView(View):
 			openFilesLine = openFilesLine.strip()
 		to[self.y] = writeutil.write(self.x + 8, to[self.y], openFilesLine)
 		return to
+		"""
+		pass
