@@ -1,7 +1,5 @@
-import tide.terminal as terminal
 import os
 from tide.classes.View import View
-import tide.writeutil as writeutil
 
 class ProjectView(View):
 	def __init__(self, window, location):
@@ -38,16 +36,14 @@ class ProjectView(View):
 		#self.window.border()
 		#self.window.noutrefresh()
 		#return
-
-		y, x = self.window.getbegyx()
 		height, width = self.window.getmaxyx()
 
-		self.window.insnstr(y, x, f'┌{"─" * (width - 2)}┐', width)
+		self.window.insnstr(0, 0, f'┌{"─" * (width - 2)}┐', width)
 		scopeName = os.path.basename(self.location)
-		self.window.insnstr(y + 1, x, f'│{scopeName.center(width - 2, " ")}│', width)
+		self.window.insnstr(1, 0, f'│{scopeName.center(width - 2, " ")}│', width)
 		for line in range(2, height - 3):
-			self.window.insnstr(y + line, x, f'│{" " * (width - 2)}│', width)
-		self.window.insnstr(y + height - 3, x, f'├{"─" * (width - 2)}┤', width)
-		self.window.insnstr(y + height - 2, x, f'│{(str("10") + " files").center(width - 2, " ")}│', width)
-		self.window.insnstr(y + height - 1, x, f'└{"─" * (width - 2)}┘', width)
+			self.window.insnstr(line, 0, f'│{" " * (width - 2)}│', width)
+		self.window.insnstr(height - 3, 0, f'├{"─" * (width - 2)}┤', width)
+		self.window.insnstr(height - 2, 0, f'│{(str("10") + " files").center(width - 2, " ")}│', width)
+		self.window.insnstr(height - 1, 0, f'└{"─" * (width - 2)}┘', width)
 		self.window.noutrefresh()

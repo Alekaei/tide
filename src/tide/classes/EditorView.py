@@ -1,9 +1,8 @@
 
 import os, re, curses
-import tide.terminal as terminal
 from tide.classes.View import View
 from tide.classes.File import File
-import tide.writeutil as writeutil
+from tide.classes.Logger import logger
 
 class EditorView(View):
 	def __init__(self, window):
@@ -32,36 +31,23 @@ class EditorView(View):
 			├──────┴─────────────────────────────────────────────────────────────────────────┐
 			│ utf-8  python                                                     Ln 12, Col 4 │
 			└────────────────────────────────────────────────────────────────────────────────┘
-		to[self.y + 1] = writeutil.write(self.x, to[self.y + 1], '┌──────┐')
-		for y in range(2, self.height - 2):
-			to[self.y + y] = writeutil.write(self.x, to[self.y + y], f'│      │')
-		to[self.y + self.height - 3] = writeutil.write(self.x, to[self.y + self.height - 3], f'├──────┴{"─" * (self.width - 9)}┐')
-		to[self.y + self.height - 2] = writeutil.write(self.x, to[self.y + self.height - 2], f'│{" " * (self.width - 2)}│')
-		to[self.y + self.height - 1] = writeutil.write(self.x, to[self.y + self.height - 1], f'└{"─" * (self.width - 2)}┘')
-		to = self.__render_files(to)
-		return to
 		"""
-
-		y, x = self.window.getbegyx()
 		height, width = self.window.getmaxyx()
 
-		self.window.insnstr(0, 0, f'┌──────┐{" " * (width - 8)}', width)
-		for editorline in range(1, height - 3):
+		logger.logInformation(f'Drawing {self} at size `{[width, height]}`')
+
+		self.window.insnstr(1, 0, f'┌──────┐{" " * (width - 8)}', width)
+		for editorline in range(2, height - 3):
 			self.window.insnstr(editorline, 0, f'│      │{" " * (width - 8)}', 0)
 		self.window.insnstr(height - 3, 0, f'├──────┴{"─" * (width - 9)}┐', width)
 		self.window.insnstr(height - 2, 0, f'│{" " * (width - 2)}│', width)
 		self.window.insnstr(height - 1, 0, f'└{"─" * (width - 2)}┘', width)
+		self.window.addstr(height - 2, 2, 'utf-8 python')
+		self.window.addstr(height - 2, width - 13, 'Ln 1, Col 1')
+
+		self.__render_files()
+
 		self.window.noutrefresh()
-
-	def RenderFile(self):
-		if len(self.openFiles) == 0:
-			return
-
-		openFile = self.openFiles[self.file_index]
-
-		line_index = 0 if openFile.far_y <= self.height - 6 else openFile.far_x - (self.height - 6)
-		line_start_index = 0 if openFile.far_x <= self.width - 11 else openFile.far_y - (self.width - 11)
-
 
 	def OpenFile(self, path):
 		self.far_x = 0
@@ -91,29 +77,43 @@ class EditorView(View):
 			to[start_y + i] = writeutil.write(start_x, to[start_y + i], msg_lines[i])
 		return to
 		"""
+		height, width = self.window.getmaxyx()
+
+		msg_lines = [
+			"┌─┬─────┬─┐",
+			"│ └─────┘ │    Oh no!",
+			"│▐███████▌│    You haven't opened a file yet :(",
+			"││───────││",
+			"││───────││",
+			"└┴───────┴┘"
+		]
+
+		start_y = ((height - 5) // 2) - 2
+		start_x = ((width - 10) // 2)
+
+		for i in range(len(msg_lines)):
+			self.window.addstr(start_y + i, start_x, msg_lines[i])
+
 		pass
 
 	def __render_files(self):
-		"""
-		if len(self.openFiles) == 0:  # No Files Open
-			return self.__no_open_files(to)
-		openFilesLine = ""
-		for i, file in enumerate(self.openFiles):
-			if i == self.file_index:  # CURRENT OPEN FILE
-				openFilesLine += f' \033[31m[{file.name:<12}{"●" if file.needs_saving else " "}]\033[0m'
+		height, width = self.window.getmaxyx()
+		if len(self.openFiles) == 0:
+			self.__no_open_files()
+			return;
+		openFilesLineIndex = 9
 
-				# Render currently opened file to terminal
-				file_no_start = file.getLowerLimit()
-				for line in range(0, min(len(file.lines), self.height - 5)):
-					to[self.y + 2 + line] = writeutil.write(self.x + 1, to[self.y + 2 + line], f'{file_no_start + line:>5} ')
-					to[self.y + 2 + line] = writeutil.write(self.x + 9, to[self.y + 2 + line], re.sub(r'\t', '    ', file.lines[line]))
-				to[self.y + self.height - 2] = writeutil.write(self.x + 1, to[self.y + self.height - 2], f'{file.encoding}  {file.fileType}')
-				cursor_pos = f'Ln {file.cursor_y}, Col {file.cursor_x}'
-				to[self.y + self.height - 2] = writeutil.write(self.x + self.width - len(cursor_pos) - 2, to[self.y + self.height - 2], cursor_pos)
+		for i, file in enumerate(self.openFiles):
+			fileLine = f'[{file.name:<12}{"●" if file.needs_saving else " "}]'
+			if i == self.file_index:
+
+				self.window.addstr(0, openFilesLineIndex, fileLine, curses.color_pair(161))
+				
+				for line in range(min(len(file.lines), height - 5)):
+					self.window.addstr(2 + line, 1, f'{line + 1:>5}')
+					self.window.addstr(2 + line, 9, file.lines[line])
 			else:
-				openFilesLine += f' [{file.name:<12}{"●" if file.needs_saving else " "}]'
-			openFilesLine = openFilesLine.strip()
-		to[self.y] = writeutil.write(self.x + 8, to[self.y], openFilesLine)
-		return to
-		"""
+				self.window.addstr(0, openFilesLineIndex, fileLine)
+				pass
+			openFilesLineIndex += len(fileLine) + 1
 		pass

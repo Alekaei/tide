@@ -1,6 +1,9 @@
 # Ignore my test file
 test.py
 
+# Ignore logs folder
+src/logs
+
 # Ignore debug file
 launch.json
 

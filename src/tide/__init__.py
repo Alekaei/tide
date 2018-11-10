@@ -1,7 +1,7 @@
 __author__ = 'Aleksei Ivanov'
 __version__ = '0.0.1'
 
-import os, time, traceback, platform, curses
+import os, time, traceback, platform, curses, argparse
 
 if platform.system() == 'Windows':
 	pritn('Windows is not supported')
@@ -14,10 +14,11 @@ from tide.classes.Layout import Layout
 
 from tide.classes.TUI import TUI
 from tide.classes.Localization import Localization
+from tide.classes.Logger import logger
 
 tui = None
 localization = None
-
+directory = None
 
 # TEMPORARY: this 
 def layout_temporary(self):
@@ -47,6 +48,7 @@ class TideApp:
 			See dump_help() for the command syntax
 		"""
 		self.args = args
+		logger.logInformation('Initializing TideApp...')
 
 	def print_help(self):
 		"""Print tide command help to stdout"""
@@ -62,17 +64,26 @@ class TideApp:
 	def __enter__(self):
 		"""Executed on example: with TideApp(sys.argv) as app:"""
 		global tui, localization
-		# Curses startup
+		
+		#print(self.__parse_args__())
 
+		#quit()
 		# Allow the editor to run if requested
 		self.should_run = True
 		self.screen = curses.initscr()
+		self.__color_init__()
 		curses.noecho()
 		curses.cbreak()
+		curses.raw()
 		self.screen.keypad(True)
 
+
+		logger.logInformation('Initializing TUI...')
 		tui = TUI()
+		logger.logInformation('Done...')
+		logger.logInformation('Initializing Localization...')
 		localization = Localization()
+		logger.logInformation('Done...')
 
 
 		if "--help" in self.args:
@@ -85,6 +96,8 @@ class TideApp:
 			self.file = self.args[1]
 		else:	
 			self.file = os.path.abspath(".")
+		
+		logger.logInformation(f'Starting TideApp in dir \'{self.file}\'')
 
 		return self
 
@@ -92,25 +105,78 @@ class TideApp:
 
 		# temporary layout
 		#layout_temporary(self)
-
+		logger.logInformation('Generating temporary Layout')
 		tui.layout.setType(Layout.HORIZONTAL)
-		tui.layout.splitPoint = 0.5
+		tui.layout.splitPoint = 30
 		tui.layout.setView(0, ProjectView, self.file)
-		tui.layout.setView(1, EditorView)
-
+		#tui.layout.setView(1, EditorView)
+		tui.layout.setView(1, Layout)
+		tui.layout.views[1].setType(Layout.VERTICAL)
+		tui.layout.views[1].splitPoint = -10
+		tui.layout.views[1].setView(0, EditorView)
+		tui.layout.views[1].setView(1, TerminalView, self.file)
+		
 		lastUpdate = time.time()
+		tui.__render__()
 		while self.should_run:
 			# Main update loop
 			# Render loop every 100ms
-			if time.time() - lastUpdate > 0.1:
-				tui.__render__()
-			"""
-			if keyboard.is_pressed('esc'):
+			key = self.screen.getch()
+
+			tui.__render__()
+
+			if key == ord('q'):
 				self.cleanup()
 				break
-			"""
+			y, x = self.screen.getmaxyx()
+			if y != curses.LINES or x != curses.COLS:
+				self.update_size(x, y)
+
+	def update_size(self, width, height):
+		curses.resizeterm(height, width)
+		self.screen.refresh()
+		logger.logInformation(f'Terminal size updated to `{[width, height]}`')
+		tui.layout.cols = width
+		tui.layout.lines = height
+		tui.layout.__update_size__()
+
 	def cleanup(self):
 		curses.endwin()
 
 	def __exit__(self, type, value, traceback):
 		self.cleanup()
+
+	def __parse_args__(self):
+		parser = argparse.ArgumentParser(
+			description='TIDE is a terminal integrated development environment capable of editing files through the terminal'
+		)
+		parser.add_argument(
+			'location',
+			dest='scope',
+			metavar='PATH',
+			type=str,
+			help='the path to scope from, can be a file or folder'
+		)
+		parser.add_argument(
+			'-l',
+			'--loglevel',
+			dest='loglevel',
+			required=False,
+			type=int,
+			default=1,
+			help='the level of logging to provide (default: 1), --levels to see a list of available'
+		)
+		parser.add_argument(
+			'--levels',
+			dest='levels',
+			required=False,
+			help='list of log levels'
+		)
+
+		return vars(parser.parse_args())
+
+	def __color_init__(self):
+		curses.start_color()
+		curses.use_default_colors()
+		for i in range(0, curses.COLORS):
+			curses.init_pair(i, i, -1);
